@@ -581,6 +581,102 @@ to alarms that are common to all record types.
 		interest(1)
 		menu(menuAlarmSevr)
 	}
+    field(ZRMG,DBF_STRING) {
+        prompt("Alarm messages for value Zero")
+        promptgroup("70 - Alarm")
+        interest(1)
+        size(80)
+    }
+    field(ONMG,DBF_STRING) {
+        prompt("Alarm messages for value One")
+        promptgroup("70 - Alarm")
+        interest(1)
+        size(80)
+    }
+    field(TWMG,DBF_STRING) {
+        prompt("Alarm messages for value Two")
+        promptgroup("70 - Alarm")
+        interest(1)
+        size(80)
+    }
+    field(THMG,DBF_STRING) {
+        prompt("Alarm messages for value Three")
+        promptgroup("70 - Alarm")
+        interest(1)
+        size(80)
+    }
+    field(FRMG,DBF_STRING) {
+        prompt("Alarm messages for value Four")
+        promptgroup("70 - Alarm")
+        interest(1)
+        size(80)
+    }
+    field(FVMG,DBF_STRING) {
+        prompt("Alarm messages for value Five")
+        promptgroup("70 - Alarm")
+        interest(1)
+        size(80)
+    }
+    field(SXMG,DBF_STRING) {
+        prompt("Alarm messages for value Six")
+        promptgroup("70 - Alarm")
+        interest(1)
+        size(80)
+    }
+    field(SVMG,DBF_STRING) {
+        prompt("Alarm messages for value Seven")
+        promptgroup("70 - Alarm")
+        interest(1)
+        size(80)
+    }
+    field(EIMG,DBF_STRING) {
+        prompt("Alarm messages for value Eight")
+        promptgroup("70 - Alarm")
+        interest(1)
+        size(80)
+    }
+    field(NIMG,DBF_STRING) {
+        prompt("Alarm messages for value Nine")
+        promptgroup("70 - Alarm")
+        interest(1)
+        size(80)
+    }
+    field(TEMG,DBF_STRING) {
+        prompt("Alarm messages for value Ten")
+        promptgroup("70 - Alarm")
+        interest(1)
+        size(80)
+    }
+    field(ELMG,DBF_STRING) {
+        prompt("Alarm messages for value Eleven")
+        promptgroup("70 - Alarm")
+        interest(1)
+        size(80)
+    }
+    field(TVMG,DBF_STRING) {
+        prompt("Alarm messages for value Twelve")
+        promptgroup("70 - Alarm")
+        interest(1)
+        size(80)
+    }
+    field(TTMG,DBF_STRING) {
+        prompt("Alarm messages for value Thirteen")
+        promptgroup("70 - Alarm")
+        interest(1)
+        size(80)
+    }
+    field(FTMG,DBF_STRING) {
+        prompt("Alarm messages for value Fourteen")
+        promptgroup("70 - Alarm")
+        interest(1)
+        size(80)
+    }
+    field(FFMG,DBF_STRING) {
+        prompt("Alarm messages for value Fifteen")
+        promptgroup("70 - Alarm")
+        interest(1)
+        size(80)
+    }
 
 =head3 Run-time Parameters
 

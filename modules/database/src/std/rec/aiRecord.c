@@ -316,6 +316,8 @@ static void checkAlarms(aiRecord *prec, epicsTimeStamp *lastTime)
     double val, hyst, lalm, alev, aftc, afvl;
     epicsEnum16 asev;
 
+    char * user_amsg = NULL;
+
     if (prec->udf) {
         recGblSetSevr(prec, UDF_ALARM, prec->udfs);
         prec->afvl = 0;
@@ -329,27 +331,36 @@ static void checkAlarms(aiRecord *prec, epicsTimeStamp *lastTime)
     /* check VAL against alarm limits */
     if ((asev = prec->hhsv) &&
         (val >= (alev = prec->hihi) ||
-         ((lalm == alev) && (val >= alev - hyst))))
-        alarmRange = range_Hihi;
+         ((lalm == alev) && (val >= alev - hyst)))) {
+            alarmRange = range_Hihi;
+            user_amsg = prec->hhmg;
+    }
     else
     if ((asev = prec->llsv) &&
         (val <= (alev = prec->lolo) ||
-         ((lalm == alev) && (val <= alev + hyst))))
-        alarmRange = range_Lolo;
+         ((lalm == alev) && (val <= alev + hyst)))) {
+            alarmRange = range_Lolo;
+            user_amsg = prec->llmg;
+    }
     else
     if ((asev = prec->hsv) &&
         (val >= (alev = prec->high) ||
-         ((lalm == alev) && (val >= alev - hyst))))
-        alarmRange = range_High;
+         ((lalm == alev) && (val >= alev - hyst)))) {
+            alarmRange = range_High;
+            user_amsg = prec->himg;
+    }
     else
     if ((asev = prec->lsv) &&
         (val <= (alev = prec->low) ||
-         ((lalm == alev) && (val <= alev + hyst))))
-        alarmRange = range_Low;
+         ((lalm == alev) && (val <= alev + hyst)))) {
+            alarmRange = range_Low;
+            user_amsg = prec->lomg;
+    }
     else {
         alev = val;
         asev = NO_ALARM;
         alarmRange = range_Normal;
+        user_amsg = "Just right!";
     }
 
     aftc = prec->aftc;
@@ -402,7 +413,7 @@ static void checkAlarms(aiRecord *prec, epicsTimeStamp *lastTime)
 
     if (asev) {
         /* Report alarm condition, store LALM for future HYST calculations */
-        if (recGblSetSevr(prec, range_stat[alarmRange], asev))
+        if (recGblSetSevrMsg(prec, range_stat[alarmRange], asev, user_amsg))
             prec->lalm = alev;
     } else {
         /* No alarm condition, reset LALM */

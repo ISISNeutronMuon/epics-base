@@ -297,6 +297,8 @@ static void checkAlarms(mbbiRecord *prec, epicsTimeStamp *timeLast)
     epicsEnum16 asev;
     epicsEnum16 val = prec->val;
 
+    char * user_amsg = NULL;
+
     /* Check for UDF alarm */
     if (prec->udf) {
         recGblSetSevr(prec, UDF_ALARM, prec->udfs);
@@ -314,6 +316,40 @@ static void checkAlarms(mbbiRecord *prec, epicsTimeStamp *timeLast)
         epicsEnum16 *severities = &prec->zrsv;
 
         alarm = severities[prec->val];
+        switch(prec->val) {
+            case 0:
+                user_amsg = prec->zrmg; break;
+            case 1:
+                user_amsg = prec->onmg; break;
+            case 2:
+                user_amsg = prec->twmg; break;
+            case 3:
+                user_amsg = prec->thmg; break;
+            case 4:
+                user_amsg = prec->frmg; break;
+            case 5:
+                user_amsg = prec->fvmg; break;
+            case 6:
+                user_amsg = prec->sxmg; break;
+            case 7:
+                user_amsg = prec->svmg; break;
+            case 8:
+                user_amsg = prec->eimg; break;
+            case 9:
+                user_amsg = prec->nimg; break;
+            case 10:
+                user_amsg = prec->temg; break;
+            case 11:
+                user_amsg = prec->elmg; break;
+            case 12:
+                user_amsg = prec->tvmg; break;
+            case 13:
+                user_amsg = prec->ttmg; break;
+            case 14:
+                user_amsg = prec->ftmg; break;
+            case 15:
+                user_amsg = prec->ffmg; break;
+        }
     }
 
     aftc = prec->aftc;
@@ -338,7 +374,7 @@ static void checkAlarms(mbbiRecord *prec, epicsTimeStamp *timeLast)
     }
 
     asev = alarm;
-    recGblSetSevr(prec, STATE_ALARM, asev);
+    recGblSetSevrMsg(prec, STATE_ALARM, asev, user_amsg);
 
     /* Check for COS alarm */
     if (val == prec->lalm ||
