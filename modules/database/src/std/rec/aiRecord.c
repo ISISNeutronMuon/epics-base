@@ -436,7 +436,7 @@ static void checkAlarms(aiRecord *prec, epicsTimeStamp *lastTime)
 
     if (asev) {
         /* Report alarm condition, store LALM for future HYST calculations */
-        if (recGblSetSevrMsg(prec, range_stat[alarmRange], asev, "%s", amsg_from_info))
+        if (recGblSetSevrMsg(prec, range_stat[alarmRange], asev, amsg_from_info))
             prec->lalm = alev;
     } else {
         /* No alarm condition, reset LALM */
