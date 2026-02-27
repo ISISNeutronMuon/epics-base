@@ -333,24 +333,12 @@ monitoring functionality.
         interest(1)
         prop(YES)       # get_alarm_double
     }
-    field(HHMG,DBF_STRING) {
-        prompt("Hihi Alarm Message")
-        promptgroup("70 - Alarm")
-        interest(1)
-        size(80)
-    }
     field(LOLO,DBF_DOUBLE) {
         prompt("Lolo Alarm Limit")
         promptgroup("70 - Alarm")
         pp(TRUE)
         interest(1)
         prop(YES)       # get_alarm_double
-    }
-    field(LLMG,DBF_STRING) {
-        prompt("Lolo Alarm Message")
-        promptgroup("70 - Alarm")
-        interest(1)
-        size(80)
     }
     field(HIGH,DBF_DOUBLE) {
         prompt("High Alarm Limit")
@@ -359,24 +347,12 @@ monitoring functionality.
         interest(1)
         prop(YES)       # get_alarm_double
     }
-    field(HIMG,DBF_STRING) {
-        prompt("High Alarm Message")
-        promptgroup("70 - Alarm")
-        interest(1)
-        size(80)
-    }
     field(LOW,DBF_DOUBLE) {
         prompt("Low Alarm Limit")
         promptgroup("70 - Alarm")
         pp(TRUE)
         interest(1)
         prop(YES)       # get_alarm_double
-    }
-    field(LOMG,DBF_STRING) {
-        prompt("Low Alarm Message")
-        promptgroup("70 - Alarm")
-        interest(1)
-        size(80)
     }
     field(HHSV,DBF_MENU) {
         prompt("Hihi Severity")
@@ -494,6 +470,30 @@ monitoring functionality.
         interest(3)
     }
 
+	field(HIHI_ALARM_MSG,DBF_NOACCESS) {
+		prompt("Private HIHI Alarm Message")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("char                *hihi_alarm_msg")
+	}
+    field(HIGH_ALARM_MSG,DBF_NOACCESS) {
+		prompt("Private HIGH Alarm Message")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("char                *high_alarm_msg")
+	}
+    field(LOLO_ALARM_MSG,DBF_NOACCESS) {
+		prompt("Private LOLO Alarm Message")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("char                *lolo_alarm_msg")
+	}
+    field(LOW_ALARM_MSG,DBF_NOACCESS) {
+		prompt("Private LOW Alarm Message")
+		special(SPC_NOMOD)
+		interest(4)
+		extra("char                *low_alarm_msg")
+	}
 =head3 Simulation Mode Parameters
 
 The following fields are used to operate the record in simulation mode.

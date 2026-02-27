@@ -22,6 +22,7 @@
 #include <string.h>
 
 #include "dbDefs.h"
+#include "dbStaticLib.h"
 #include "errlog.h"
 #include "epicsMath.h"
 #include "alarm.h"
@@ -92,6 +93,18 @@ static void convert(aiRecord *prec);
 static void monitor(aiRecord *prec);
 static long readValue(aiRecord *prec);
 
+static char* get_info_alarmmsg(aiRecord* prec, const char* const info_str) {
+    /* Construct a full DBENTRY from an aiRecord and then search it for the specified 
+       INFO field strings. */
+    DBENTRY dbEntry;
+    dbInitEntryFromRecord((dbCommon*) prec, &dbEntry);
+
+    if (!dbFindInfo(&dbEntry, info_str)) 
+        return dbEntry.pinfonode->string;
+    else
+        return NULL;
+}
+
 static long init_record(struct dbCommon *pcommon, int pass)
 {
     struct aiRecord *prec = (struct aiRecord *)pcommon;
@@ -118,6 +131,12 @@ static long init_record(struct dbCommon *pcommon, int pass)
         prec->eoff = prec->egul;
     }
 
+    /* On initialisation cache strings derived from INFO fields. */
+    prec->hihi_alarm_msg = get_info_alarmmsg(prec, "BASE:AI:HIHI_MSG");
+    prec->high_alarm_msg = get_info_alarmmsg(prec, "BASE:AI:HIGH_MSG");
+    prec->low_alarm_msg  = get_info_alarmmsg(prec, "BASE:AI:LOW_MSG");
+    prec->lolo_alarm_msg = get_info_alarmmsg(prec, "BASE:AI:LOLO_MSG");
+
     if (pdset->common.init_record) {
         long status = pdset->common.init_record(pcommon);
         if (prec->linr == menuConvertSLOPE) {
@@ -130,6 +149,7 @@ static long init_record(struct dbCommon *pcommon, int pass)
     prec->alst = prec->val;
     prec->lalm = prec->val;
     prec->oraw = prec->rval;
+
     return(0);
 }
 
@@ -299,7 +319,7 @@ static long get_alarm_double(DBADDR *paddr,struct dbr_alDouble *pad)
     } else recGblGetAlarmDouble(paddr,pad);
     return(0);
 }
-
+
 static void checkAlarms(aiRecord *prec, epicsTimeStamp *lastTime)
 {
     enum {
@@ -316,7 +336,7 @@ static void checkAlarms(aiRecord *prec, epicsTimeStamp *lastTime)
     double val, hyst, lalm, alev, aftc, afvl;
     epicsEnum16 asev;
 
-    char * user_amsg = NULL;
+    char * amsg_from_info = NULL;
 
     if (prec->udf) {
         recGblSetSevr(prec, UDF_ALARM, prec->udfs);
@@ -333,34 +353,33 @@ static void checkAlarms(aiRecord *prec, epicsTimeStamp *lastTime)
         (val >= (alev = prec->hihi) ||
          ((lalm == alev) && (val >= alev - hyst)))) {
             alarmRange = range_Hihi;
-            user_amsg = prec->hhmg;
+            amsg_from_info = prec->hihi_alarm_msg;
     }
     else
     if ((asev = prec->llsv) &&
         (val <= (alev = prec->lolo) ||
          ((lalm == alev) && (val <= alev + hyst)))) {
             alarmRange = range_Lolo;
-            user_amsg = prec->llmg;
+            amsg_from_info = prec->lolo_alarm_msg;
     }
     else
     if ((asev = prec->hsv) &&
         (val >= (alev = prec->high) ||
          ((lalm == alev) && (val >= alev - hyst)))) {
             alarmRange = range_High;
-            user_amsg = prec->himg;
+            amsg_from_info = prec->high_alarm_msg;
     }
     else
     if ((asev = prec->lsv) &&
         (val <= (alev = prec->low) ||
          ((lalm == alev) && (val <= alev + hyst)))) {
             alarmRange = range_Low;
-            user_amsg = prec->lomg;
+            amsg_from_info = prec->low_alarm_msg;
     }
     else {
         alev = val;
         asev = NO_ALARM;
         alarmRange = range_Normal;
-        user_amsg = "Just right!";
     }
 
     aftc = prec->aftc;
@@ -390,10 +409,12 @@ static void checkAlarms(aiRecord *prec, epicsTimeStamp *lastTime)
             case range_Hihi:
                 asev = prec->hhsv;
                 alev = prec->hihi;
+                amsg_from_info = prec->hihi_alarm_msg;
                 break;
             case range_High:
                 asev = prec->hsv;
                 alev = prec->high;
+                amsg_from_info = prec->high_alarm_msg;
                 break;
             case range_Normal:
                 asev = NO_ALARM;
@@ -401,10 +422,12 @@ static void checkAlarms(aiRecord *prec, epicsTimeStamp *lastTime)
             case range_Low:
                 asev = prec->lsv;
                 alev = prec->low;
+                amsg_from_info = prec->low_alarm_msg;
                 break;
             case range_Lolo:
                 asev = prec->llsv;
                 alev = prec->lolo;
+                amsg_from_info = prec->lolo_alarm_msg;
                 break;
             }
         }
@@ -413,7 +436,7 @@ static void checkAlarms(aiRecord *prec, epicsTimeStamp *lastTime)
 
     if (asev) {
         /* Report alarm condition, store LALM for future HYST calculations */
-        if (recGblSetSevrMsg(prec, range_stat[alarmRange], asev, user_amsg))
+        if (recGblSetSevrMsg(prec, range_stat[alarmRange], asev, "%s", amsg_from_info))
             prec->lalm = alev;
     } else {
         /* No alarm condition, reset LALM */
