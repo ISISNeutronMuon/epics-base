@@ -132,10 +132,10 @@ static long init_record(struct dbCommon *pcommon, int pass)
     }
 
     /* On initialisation cache strings derived from INFO fields. */
-    prec->hihi_alarm_msg = get_info_alarmmsg(prec, "BASE:AI:HIHI_MSG");
-    prec->high_alarm_msg = get_info_alarmmsg(prec, "BASE:AI:HIGH_MSG");
-    prec->low_alarm_msg  = get_info_alarmmsg(prec, "BASE:AI:LOW_MSG");
-    prec->lolo_alarm_msg = get_info_alarmmsg(prec, "BASE:AI:LOLO_MSG");
+    prec->hihi_alarm_msg = get_info_alarmmsg(prec, "BASE:HIHI_MSG");
+    prec->high_alarm_msg = get_info_alarmmsg(prec, "BASE:HIGH_MSG");
+    prec->low_alarm_msg  = get_info_alarmmsg(prec, "BASE:LOW_MSG");
+    prec->lolo_alarm_msg = get_info_alarmmsg(prec, "BASE:LOLO_MSG");
 
     if (pdset->common.init_record) {
         long status = pdset->common.init_record(pcommon);
