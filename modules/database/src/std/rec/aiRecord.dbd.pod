@@ -219,6 +219,13 @@ to alarms that are common to all record types.
 
 =fields HIHI, HIGH, LOW, LOLO, HHSV, HSV, LSV, LLSV, HYST, AFTC, LALM
 
+| Info Field | Summary | Type | DCT | Default | Read | Write | CA PP |
+|------------|---------|------|-----|---------|------|-------|-------|
+| BASE:HIHI_MSG | Hihi Alarm Message | STRING[40] | No | | No | No | No |
+| BASE:HIGH_MSG | High Alarm Message | STRING[40] | No | | No | No | No |
+| BASE:LOW_MSG | Low Alarm Message | STRING[40] | No | | No | No | No |
+| BASE:LOLO_MSG | Lolo Alarm Message | STRING[40] | No | | No | No | No |
+
 =head3 Monitor Parameters
 
 These parameters are used to determine when to send monitors placed on the VAL
@@ -471,25 +478,25 @@ monitoring functionality.
     }
 
 	field(HIHI_ALARM_MSG,DBF_NOACCESS) {
-		prompt("Private HIHI Alarm Message")
+		prompt("Hihi Alarm Message")
 		special(SPC_NOMOD)
 		interest(4)
 		extra("char                *hihi_alarm_msg")
 	}
     field(HIGH_ALARM_MSG,DBF_NOACCESS) {
-		prompt("Private HIGH Alarm Message")
+		prompt("High Alarm Message")
 		special(SPC_NOMOD)
 		interest(4)
 		extra("char                *high_alarm_msg")
 	}
     field(LOLO_ALARM_MSG,DBF_NOACCESS) {
-		prompt("Private LOLO Alarm Message")
+		prompt("Lolo Alarm Message")
 		special(SPC_NOMOD)
 		interest(4)
 		extra("char                *lolo_alarm_msg")
 	}
     field(LOW_ALARM_MSG,DBF_NOACCESS) {
-		prompt("Private LOW Alarm Message")
+		prompt("Low Alarm Message")
 		special(SPC_NOMOD)
 		interest(4)
 		extra("char                *low_alarm_msg")
