@@ -581,6 +581,12 @@ to alarms that are common to all record types.
 		interest(1)
 		menu(menuAlarmSevr)
 	}
+	field(UNMG,DBF_STRING) {
+		prompt("Alarm message for Unknown State Severity")
+		promptgroup("70 - Alarm")
+        interest(1)
+        size(80)
+	}
     field(ZRMG,DBF_STRING) {
         prompt("Alarm messages for value Zero")
         promptgroup("70 - Alarm")
