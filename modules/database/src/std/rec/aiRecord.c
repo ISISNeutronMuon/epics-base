@@ -93,16 +93,16 @@ static void convert(aiRecord *prec);
 static void monitor(aiRecord *prec);
 static long readValue(aiRecord *prec);
 
-static char* get_info_alarmmsg(aiRecord* prec, const char* const info_str) {
+static char* get_info_alarmmsg(aiRecord* prec, const char* const search_str, const char* const default_str) {
     /* Construct a full DBENTRY from an aiRecord and then search it for the specified 
-       INFO field strings. */
+       INFO field strings. Return it if it exists, otherwise return the default string or NULL. */
     DBENTRY dbEntry;
     dbInitEntryFromRecord((dbCommon*) prec, &dbEntry);
 
-    if (!dbFindInfo(&dbEntry, info_str)) 
+    if (!dbFindInfo(&dbEntry, search_str)) 
         return dbEntry.pinfonode->string;
     else
-        return NULL;
+        return (default_str) ? default_str : NULL;
 }
 
 static long init_record(struct dbCommon *pcommon, int pass)
@@ -132,10 +132,12 @@ static long init_record(struct dbCommon *pcommon, int pass)
     }
 
     /* On initialisation cache strings derived from INFO fields. */
-    prec->hihi_alarm_msg = get_info_alarmmsg(prec, "BASE:HIHI_MSG");
-    prec->high_alarm_msg = get_info_alarmmsg(prec, "BASE:HIGH_MSG");
-    prec->low_alarm_msg  = get_info_alarmmsg(prec, "BASE:LOW_MSG");
-    prec->lolo_alarm_msg = get_info_alarmmsg(prec, "BASE:LOLO_MSG");
+    const char* const alarm_msg_master = get_info_alarmmsg(prec, "BASE:AMSG_MASTER", NULL);
+
+    prec->alarm_msg_hihi = get_info_alarmmsg(prec, "BASE:AMSG_HIHI", alarm_msg_master);
+    prec->alarm_msg_high = get_info_alarmmsg(prec, "BASE:AMSG_HIGH", alarm_msg_master);
+    prec->alarm_msg_low  = get_info_alarmmsg(prec, "BASE:AMSG_LOW", alarm_msg_master);
+    prec->alarm_msg_lolo = get_info_alarmmsg(prec, "BASE:AMSG_LOLO", alarm_msg_master);
 
     if (pdset->common.init_record) {
         long status = pdset->common.init_record(pcommon);
@@ -353,28 +355,28 @@ static void checkAlarms(aiRecord *prec, epicsTimeStamp *lastTime)
         (val >= (alev = prec->hihi) ||
          ((lalm == alev) && (val >= alev - hyst)))) {
             alarmRange = range_Hihi;
-            amsg_from_info = prec->hihi_alarm_msg;
+            amsg_from_info = prec->alarm_msg_hihi;
     }
     else
     if ((asev = prec->llsv) &&
         (val <= (alev = prec->lolo) ||
          ((lalm == alev) && (val <= alev + hyst)))) {
             alarmRange = range_Lolo;
-            amsg_from_info = prec->lolo_alarm_msg;
+            amsg_from_info = prec->alarm_msg_lolo;
     }
     else
     if ((asev = prec->hsv) &&
         (val >= (alev = prec->high) ||
          ((lalm == alev) && (val >= alev - hyst)))) {
             alarmRange = range_High;
-            amsg_from_info = prec->high_alarm_msg;
+            amsg_from_info = prec->alarm_msg_high;
     }
     else
     if ((asev = prec->lsv) &&
         (val <= (alev = prec->low) ||
          ((lalm == alev) && (val <= alev + hyst)))) {
             alarmRange = range_Low;
-            amsg_from_info = prec->low_alarm_msg;
+            amsg_from_info = prec->alarm_msg_low;
     }
     else {
         alev = val;
@@ -409,12 +411,12 @@ static void checkAlarms(aiRecord *prec, epicsTimeStamp *lastTime)
             case range_Hihi:
                 asev = prec->hhsv;
                 alev = prec->hihi;
-                amsg_from_info = prec->hihi_alarm_msg;
+                amsg_from_info = prec->alarm_msg_hihi;
                 break;
             case range_High:
                 asev = prec->hsv;
                 alev = prec->high;
-                amsg_from_info = prec->high_alarm_msg;
+                amsg_from_info = prec->alarm_msg_high;
                 break;
             case range_Normal:
                 asev = NO_ALARM;
@@ -422,12 +424,12 @@ static void checkAlarms(aiRecord *prec, epicsTimeStamp *lastTime)
             case range_Low:
                 asev = prec->lsv;
                 alev = prec->low;
-                amsg_from_info = prec->low_alarm_msg;
+                amsg_from_info = prec->alarm_msg_low;
                 break;
             case range_Lolo:
                 asev = prec->llsv;
                 alev = prec->lolo;
-                amsg_from_info = prec->lolo_alarm_msg;
+                amsg_from_info = prec->alarm_msg_lolo;
                 break;
             }
         }
