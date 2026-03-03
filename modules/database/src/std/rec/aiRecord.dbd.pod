@@ -219,6 +219,13 @@ to alarms that are common to all record types.
 
 =fields HIHI, HIGH, LOW, LOLO, HHSV, HSV, LSV, LLSV, HYST, AFTC, LALM
 
+For pvAccess PVs, the C<alarm.message> of the NTScalar may be populated with 
+strings in the INFO fields AMSG_HIHI, AMSG_HIGH, AMSG_LOW and AMSG_LOLO, 
+e.g. C<info(BASE:AMSG_HIHI, "Alarm message for HIHI")>. These fields set the 
+AMSG and may be further overridden by submodules that set the AMSG directly. 
+If not set, the C<alarm.message> is set by the module managing the pvAccess 
+PV.
+
 | Info Field | Summary | Type | DCT | Default | Read | Write | CA PP |
 |------------|---------|------|-----|---------|------|-------|-------|
 | BASE:AMSG_HIHI | Hihi Alarm Message | STRING[40] | No | | No | No | No |
