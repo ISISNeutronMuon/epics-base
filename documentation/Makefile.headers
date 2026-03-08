@@ -68,6 +68,7 @@ ca_HEADERS += db_access
 
 database_HEADERS += callback
 database_HEADERS += chfPlugin
+database_HEADERS += dbBase
 database_HEADERS += dbChannel
 database_HEADERS += dbCommon
 database_HEADERS += dbDefs
@@ -82,6 +83,7 @@ database_HEADERS += dbUnitTest
 database_HEADERS += devSup
 database_HEADERS += drvSup
 database_HEADERS += initHooks
+database_HEADERS += iocInit
 
 record_HEADERS += aaiRecord
 record_HEADERS += aaoRecord
