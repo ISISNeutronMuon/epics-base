@@ -8,7 +8,7 @@ index 15894cd0d..e74616755 100644
  include $(IOCDIR)/registry/Makefile
 -include $(IOCDIR)/rsrv/Makefile
 +# include $(IOCDIR)/rsrv/Makefile   # stripped: no CA (RSRV) server built into dbCore
- 
+
  GENVERSION = epicsVCS.h
  GENVERSIONMACRO = EPICS_VCS_VERSION
 diff --git a/modules/database/src/ioc/misc/dbCore.dbd b/modules/database/src/ioc/misc/dbCore.dbd
@@ -18,13 +18,13 @@ index adde24e4f..c807b0453 100644
 @@ -9,9 +9,6 @@ variable(atExitDebug,int)
  # Access security subroutines
  variable(asCaDebug,int)
- 
+
 -# CA server debug flag (very verbose) range[0,5]
 -variable(CASDEBUG,int)
 -
  # Link parsing debug
  variable(dbJLinkDebug,int)
- 
+
 diff --git a/modules/database/src/std/softIoc/base.dbd b/modules/database/src/std/softIoc/base.dbd
 index 37cc1ad70..c33e4824c 100644
 --- a/modules/database/src/std/softIoc/base.dbd
@@ -32,8 +32,20 @@ index 37cc1ad70..c33e4824c 100644
 @@ -26,5 +26,5 @@ include "asSub.dbd"
  # IOC Core variables
  include "dbCore.dbd"
- 
+
 -# RSRV server
 -include "rsrv.dbd"
 +# RSRV server (stripped: not built into dbCore, see modules/database/src/ioc/Makefile)
 +# include "rsrv.dbd"
+diff --git a/modules/database/test/std/rec/dbHeaderTest.c b/modules/database/test/std/rec/dbHeaderTest.c
+index 7a45ee415..1c1d9e344 100644
+--- a/modules/database/test/std/rec/dbHeaderTest.c
++++ b/modules/database/test/std/rec/dbHeaderTest.c
+@@ -206,7 +206,6 @@
+ #ifdef __cplusplus
+ #  include <resourceLib.h>
+ #endif
+-#include <rsrv.h>
+ #include <selRecord.h>
+ #include <seqRecord.h>
+ #include <shareLib.h>

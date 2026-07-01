@@ -206,7 +206,6 @@
 #ifdef __cplusplus
 #  include <resourceLib.h>
 #endif
-#include <rsrv.h>
 #include <selRecord.h>
 #include <seqRecord.h>
 #include <shareLib.h>
