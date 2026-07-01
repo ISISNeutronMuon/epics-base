@@ -43,7 +43,7 @@ include $(IOCDIR)/dbStatic/Makefile
 include $(IOCDIR)/dbtemplate/Makefile
 include $(IOCDIR)/misc/Makefile
 include $(IOCDIR)/registry/Makefile
-include $(IOCDIR)/rsrv/Makefile
+# include $(IOCDIR)/rsrv/Makefile   # stripped: no CA (RSRV) server built into dbCore
 
 GENVERSION = epicsVCS.h
 GENVERSIONMACRO = EPICS_VCS_VERSION
